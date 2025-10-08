@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class TopDownBatController : MonoBehaviour, IControllable
 {
+    public static event Action OnBatDeath;
+
     [Header("Sonar")]
     public GameObject sonarPulsePrefab;
     public Transform sonarSpawnPoint;
@@ -176,5 +178,13 @@ public class TopDownBatController : MonoBehaviour, IControllable
             return true;
         }
         return false;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("teoenming"))
+        {
+            OnBatDeath.Invoke();
+        }
     }
 }

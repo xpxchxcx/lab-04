@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Pause Menu")]
     public GameObject pauseMenu;
+    public GameObject endScreen;
     private bool isPaused = false;
 
     [Header("Poo Tracking")]
@@ -22,9 +23,11 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     public TMP_Text timerText;
 
+    private bool levelCompleted = false;
+
     private void Awake()
     {
-        // Singleton pattern
+        // Singleton
         if (instance == null)
         {
             instance = this;
@@ -40,12 +43,14 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
         Poo.OnPooCollected += OnPooCollected;
+        TopDownBatController.OnBatDeath += OnBatDeath;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         Poo.OnPooCollected -= OnPooCollected;
+        TopDownBatController.OnBatDeath -= OnBatDeath;
     }
 
     private void OnPooCollected()
@@ -54,7 +59,10 @@ public class GameManager : MonoBehaviour
         UpdateUI();
 
         if (totalPoos <= 0)
+        {
+            levelCompleted = true;
             LevelComplete();
+        }
     }
 
     private void Update()
@@ -67,16 +75,15 @@ public class GameManager : MonoBehaviour
 
         if (timerRunning && !isPaused)
         {
-            levelTimer += Time.unscaledDeltaTime; // ignore Time.timeScale
+            levelTimer += Time.unscaledDeltaTime;
             UpdateUI();
         }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
-        // Setup pause menu if it exists
         pauseMenu = GameObject.Find("PauseMenu");
+        endScreen = GameObject.Find("EndScreen");
         if (pauseMenu != null)
         {
             Button resumeButton = pauseMenu.transform.Find("ResumeButton")?.GetComponent<Button>();
@@ -89,16 +96,20 @@ public class GameManager : MonoBehaviour
 
             pauseMenu.SetActive(false);
         }
+        if (endScreen)
+        {
+            Button mainMenuButton = endScreen.transform.Find("HomeButton")?.GetComponent<Button>();
+            mainMenuButton?.onClick.RemoveAllListeners();
+            mainMenuButton?.onClick.AddListener(QuitToMainMenu);
 
-        // Count poos in current scene
+        }
+
         Transform poosParent = GameObject.Find("PooPoos")?.transform;
         totalPoos = poosParent != null ? poosParent.childCount : 0;
 
-        // Reset timer
         levelTimer = 0f;
         timerRunning = true;
 
-        // Assign UI
         timerText = GameObject.Find("TimerText")?.GetComponent<TMP_Text>();
         UpdateUI();
     }
@@ -110,8 +121,25 @@ public class GameManager : MonoBehaviour
         isPaused = true;
     }
 
+    private void OnBatDeath()
+    {
+        levelCompleted = false;         // mark as failed
+        timerRunning = false;
+        levelTimer = 0f;                // this run = 0
+        Debug.Log("Player died. Level failed. Run score = 0");
+
+        // Save 0 for this run so EndScreen shows 0
+        string levelName = SceneManager.GetActiveScene().name;
+        PlayerPrefs.SetFloat($"CurrentRun_{levelName}", 0f);
+        PlayerPrefs.Save();
+
+        SceneManager.LoadScene("EndScreen");
+    }
+
     public void ResumeGame()
     {
+        Debug.Log("resume  called");
+
         if (pauseMenu != null) pauseMenu.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
@@ -119,27 +147,17 @@ public class GameManager : MonoBehaviour
 
     public void QuitToMainMenu()
     {
+        Debug.Log("Quit to main menu called");
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 
     public void StartGame()
     {
-        PlayerPrefs.SetFloat("CurrentTime", 0f); // Reset cumulative timer
+        PlayerPrefs.SetFloat("CurrentTime", 0f);
         PlayerPrefs.SetInt("CurrentLevel", 1);
         SceneManager.LoadScene("Level 1");
-
-
-        Debug.Log("HighScore_Level 1: " + PlayerPrefs.GetFloat("HighScore_Level 1", 1f));
-        Debug.Log("HighScore_Level 2: " + PlayerPrefs.GetFloat("HighScore_Level 2", 1f));
     }
-
-
-    public void LoadMainMenu()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
-
 
     private void UpdateUI()
     {
@@ -147,11 +165,16 @@ public class GameManager : MonoBehaviour
             timerText.text = $"Time: {levelTimer:F2}s\nPoo Left: {totalPoos}";
     }
 
-
     private void LevelComplete()
     {
         timerRunning = false;
         Debug.Log($"Level complete! Time: {levelTimer:F2}s");
+
+        if (!levelCompleted)
+        {
+            Debug.Log("Level failed. Score ignored.");
+            return; // don't save anything
+        }
 
         string levelName = SceneManager.GetActiveScene().name;
 
@@ -164,26 +187,23 @@ public class GameManager : MonoBehaviour
             Debug.Log("New High Score!");
         }
 
-        // Save this run score
-        string currentRunKey = $"CurrentRun_{levelName}";
-        PlayerPrefs.SetFloat(currentRunKey, levelTimer);
+        // Save this run
+        PlayerPrefs.SetFloat($"CurrentRun_{levelName}", levelTimer);
 
         // Update cumulative time
         float totalTime = PlayerPrefs.GetFloat("CurrentTime", 0f);
         totalTime += levelTimer;
         PlayerPrefs.SetFloat("CurrentTime", totalTime);
 
-        // Determine next level
+        // Next level
         int nextLevel = PlayerPrefs.GetInt("CurrentLevel", 1) + 1;
         PlayerPrefs.SetInt("CurrentLevel", nextLevel);
         PlayerPrefs.Save();
 
-        // Load next level or EndScreen
         string nextLevelName = $"Level {nextLevel}";
         if (Application.CanStreamedLevelBeLoaded(nextLevelName))
             SceneManager.LoadScene(nextLevelName);
         else
             SceneManager.LoadScene("EndScreen");
     }
-
 }
