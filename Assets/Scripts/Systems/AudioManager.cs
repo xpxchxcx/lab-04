@@ -1,37 +1,52 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager I { get; private set; }
-    private float pitchShiftValue = 1f;
 
     [Header("Mixer (optional)")]
-    public AudioMixer mixer;                 // drag MainMixer if you want sliders
-    public string bgmParam = "BGM_Volume";   // exposed param names in Mixer
+    public AudioMixer mixer;
+    public string bgmParam = "BGM_Volume";
     public string sfxParam = "SFX_Volume";
 
-    [Header("Sources (drag from Hierarchy)")]
-    [SerializeField] private AudioSource bgmSource;   // drag child BGM
-    [SerializeField] private AudioSource sfxSource;   // drag child SFX
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource sfxSource;
 
-    [Header("Clips (drag here)")]
-    public AudioClip horrorTheme;
+    [Header("Music Clips")]
     public AudioClip levelTheme;
-    public AudioClip flying;
-    public AudioClip teoEnMing;
+    public AudioClip horrorTheme;
+
+    [Header("General SFX Clips")]
     public AudioClip enemyHit;
     public AudioClip pickup;
-    public AudioClip bigPoop;
+
+    [Header("Enemy Clips")]
+    public AudioClip[] patrolClips;
+    public AudioClip[] chaseClips;
+    public AudioClip[] investigateClips;
+
+    [HideInInspector] public AudioClip[] CurrentClipArray;
+
+    private Coroutine currentSFXCoroutine;
 
     void Awake()
     {
         if (I != null) { Destroy(gameObject); return; }
         I = this;
-        DontDestroyOnLoad(gameObject);  // remove if you don’t want it persistent
+        DontDestroyOnLoad(gameObject);
     }
 
-    // --- BGM ---
+    void Start()
+    {
+        PlayBGM(levelTheme, true);
+    }
+
+    // -----------------------------
+    // BGM Functions
+    // -----------------------------
     public void PlayBGM(AudioClip clip, bool loop = true)
     {
         if (clip == null || bgmSource == null) return;
@@ -40,48 +55,129 @@ public class AudioManager : MonoBehaviour
         bgmSource.loop = loop;
         bgmSource.Play();
     }
-    public void StopBGM() { if (bgmSource != null) bgmSource.Stop(); }
+    public AudioSource GetBGMSource() => bgmSource;
 
-    // Convenience hooks for UnityEvents / buttons:
-    public void PlayHorrorTheme() => PlayBGM(horrorTheme, true);
-    public void PlayLevelTheme() => PlayBGM(levelTheme, true);
+    public void StopBGM() => bgmSource?.Stop();
 
-
-    // --- SFX (simple, 2D) ---
+    // -----------------------------
+    // SFX Functions
+    // -----------------------------
     public void PlaySFX(AudioClip clip, float volume = 1f)
     {
         if (clip == null || sfxSource == null) return;
         sfxSource.PlayOneShot(clip, volume);
     }
 
-    // Convenience hooks:
-    public void PlayFlying() => PlaySFX(flying);
-    public void PlayEnemyHit() => PlaySFX(enemyHit);
-    public void PlayPickup() => PlaySFX(pickup);
-    public void PlayEnMingTalk() => PlaySFX(teoEnMing);
-    public void PlayBigPoop() => PlaySFX(bigPoop);
+    public IEnumerator PlayRandomSFXCoroutine(AudioClip[] clips, float minInterval, float maxInterval)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(minInterval, maxInterval));
+            if (clips.Length > 0)
+            {
+                AudioClip clip = clips[Random.Range(0, clips.Length)];
+                sfxSource.pitch = Random.Range(0.9f, 1.1f);
+                sfxSource.volume = Random.Range(0.7f, 1f);
+                sfxSource.PlayOneShot(clip);
+            }
+        }
+    }
 
-    // --- Mixer sliders (0..1 linear) ---
+    public void StopRandomSFX()
+    {
+        if (currentSFXCoroutine != null)
+        {
+            StopCoroutine(currentSFXCoroutine);
+            currentSFXCoroutine = null;
+        }
+    }
+
+    // -----------------------------
+    // Mixer Controls
+    // -----------------------------
     public void SetBGMVolume(float v) => SetDb(bgmParam, v);
     public void SetSFXVolume(float v) => SetDb(sfxParam, v);
 
     private void SetDb(string param, float linear01)
     {
-        if (mixer == null || string.IsNullOrEmpty(param)) return;
+        if (mixer == null) return;
         float db = Mathf.Log10(Mathf.Clamp(linear01, 0.0001f, 1f)) * 20f;
         mixer.SetFloat(param, db);
     }
 
-
-    void Start()
+    // -----------------------------
+    // Utility
+    // -----------------------------
+    public void FadeAudio(AudioSource src, float targetVol, float duration)
     {
-        PlayLevelTheme();
-        //GoombaDieManager.goombaDieEvent += PlayEnemyHit;
-        //GoombaDieManager.goombaDieEvent += pitchShiftOnGoombaDie;
-        //GoombaDieManager.goombaDieEvent += PlayBigPoop;
-        //PlayerMovement.PlayerJumpEvent += PlayJump;
-        //PoopGun.PoopGunShoot += PlayShoot;
+        I.StartCoroutine(FadeAudioCoroutine(src, targetVol, duration));
     }
 
+    private IEnumerator FadeAudioCoroutine(AudioSource src, float targetVol, float duration)
+    {
+        float startVol = src.volume;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            src.volume = Mathf.Lerp(startVol, targetVol, t / duration);
+            yield return null;
+        }
+        src.volume = targetVol;
+    }
+
+    // =====================================================
+    // STATE-BASED SOUND HELPERS (Now supports custom sources)
+    // =====================================================
+    public void PlayEnemyPatrolLoop(AudioSource source = null)
+    {
+        SwitchEnemyLoop(source ?? sfxSource, patrolClips, 3f, 6f);
+    }
+
+    public void PlayEnemyChaseLoop(AudioSource source = null)
+    {
+        SwitchEnemyLoop(source ?? sfxSource, chaseClips, 1f, 3f);
+    }
+
+    public void PlayEnemyInvestigateLoop(AudioSource source = null)
+    {
+        SwitchEnemyLoop(source ?? sfxSource, investigateClips, 2f, 5f);
+    }
+
+    // Core loop controller
+    private void SwitchEnemyLoop(AudioSource source, AudioClip[] clips, float minInterval, float maxInterval)
+    {
+        // If we’re already using this clip array on this source, skip
+        if (CurrentClipArray == clips && currentSFXCoroutine != null) return;
+
+        // Stop old loop coroutine (if any)
+        if (currentSFXCoroutine != null)
+        {
+            StopCoroutine(currentSFXCoroutine);
+            currentSFXCoroutine = null;
+        }
+
+        // Remember which clips are active
+        CurrentClipArray = clips;
+
+        // Start playing on the provided source
+        currentSFXCoroutine = StartCoroutine(PlayRandomSFXCoroutine(source, clips, minInterval, maxInterval));
+    }
+
+    // Version that uses custom AudioSource
+    public IEnumerator PlayRandomSFXCoroutine(AudioSource source, AudioClip[] clips, float minInterval, float maxInterval)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(minInterval, maxInterval));
+            if (clips.Length > 0 && source != null)
+            {
+                AudioClip clip = clips[Random.Range(0, clips.Length)];
+                source.pitch = Random.Range(0.9f, 1.1f);
+                source.volume = Random.Range(0.7f, 1f);
+                source.PlayOneShot(clip);
+            }
+        }
+    }
 
 }

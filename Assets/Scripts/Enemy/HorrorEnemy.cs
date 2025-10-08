@@ -21,27 +21,74 @@ public class HorrorEnemy : MonoBehaviour
     private Rigidbody2D rb;
     private Transform player;
 
-    private enum State { Patrol, Chase }
+    private enum State { Patrol, Chase, Investigate }
     private State currentState = State.Patrol;
 
     private bool playerInSight = false;
+    private Vector2 lastKnownPlayerPos;
+
+    private Vector2 investigateTarget;
+    private float investigateTimer = 0f;
+    public float investigateDuration = 3f; // seconds
+    public float investigateRadius = 1.5f; // how far it wanders around last known pos
+
+
+
+    private bool hasActivatedAudio = false;
+    private Coroutine currentSFXRoutine;
+
+
+    private AudioSource enemyAudio;
+
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic; // Kinematic Rigidbody
-        player = GameObject.FindGameObjectWithTag("Player").transform; // your bat should have tag "Player"
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        enemyAudio = GetComponent<AudioSource>();
+        if (enemyAudio == null)
+        {
+            enemyAudio = gameObject.AddComponent<AudioSource>();
+            enemyAudio.spatialBlend = 1f; // 3D sound
+            enemyAudio.minDistance = 1f;
+            enemyAudio.maxDistance = 12f;
+            enemyAudio.rolloffMode = AudioRolloffMode.Logarithmic;
+        }
     }
 
     void Update()
     {
+        UpdateAudio();
         SensePlayer();
 
         // Update state
         if (playerInSight)
+        {
+            lastKnownPlayerPos = player.position; // save last seen position
             currentState = State.Chase;
+
+        }
         else
-            currentState = State.Patrol;
+        {
+            // If we lost the player while chasing, go to Investigate
+            if (currentState == State.Chase)
+                currentState = State.Investigate;
+            else if (currentState == State.Investigate)
+            {
+                // Stay in Investigate until reaching last known pos
+                if (Vector2.Distance(transform.position, lastKnownPlayerPos) < 0.2f)
+                    currentState = State.Patrol;
+            }
+            else
+            {
+                currentState = State.Patrol;
+
+
+            }
+        }
 
         Debug.Log($"State: {currentState}, PlayerInSight: {playerInSight}");
     }
@@ -52,6 +99,7 @@ public class HorrorEnemy : MonoBehaviour
         {
             case State.Patrol: Patrol(); break;
             case State.Chase: Chase(); break;
+            case State.Investigate: Investigate(); break;
         }
     }
 
@@ -60,7 +108,6 @@ public class HorrorEnemy : MonoBehaviour
         Vector2 directionToPlayer = player.position - transform.position;
         float distance = directionToPlayer.magnitude;
 
-        // Check line of sight
         if (distance <= sightRange)
         {
             float angle = Vector2.Angle(transform.up, directionToPlayer);
@@ -68,7 +115,6 @@ public class HorrorEnemy : MonoBehaviour
 
             if (angle < fieldOfView / 2)
             {
-                // Raycast to check if wall is blocking
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, sightRange, obstacleMask | (1 << LayerMask.NameToLayer("Player")));
                 if (hit.collider != null && hit.collider.CompareTag("Player"))
                 {
@@ -97,6 +143,31 @@ public class HorrorEnemy : MonoBehaviour
     void Chase()
     {
         MoveTowards(player.position, chaseSpeed);
+    }
+
+    void Investigate()
+    {
+        if (investigateTimer <= 0f)
+        {
+            // Start investigation
+            investigateTarget = lastKnownPlayerPos + Random.insideUnitCircle * investigateRadius;
+            investigateTimer = investigateDuration;
+        }
+
+        MoveTowards(investigateTarget, patrolSpeed);
+        investigateTimer -= Time.fixedDeltaTime;
+
+        // If reached current target, pick a new nearby point
+        if (Vector2.Distance(transform.position, investigateTarget) < 0.2f)
+        {
+            investigateTarget = lastKnownPlayerPos + Random.insideUnitCircle * investigateRadius;
+        }
+
+        // After investigation time ends, go back to patrol
+        if (investigateTimer <= 0f)
+        {
+            currentState = State.Patrol;
+        }
     }
 
     void MoveTowards(Vector2 target, float speed)
@@ -136,5 +207,74 @@ public class HorrorEnemy : MonoBehaviour
                     Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[next].position);
             }
         }
+
+        // Last known player position
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(lastKnownPlayerPos, 0.15f);
+    }
+    private IEnumerator DelayedBGMStart()
+    {
+        yield return new WaitForSeconds(1.5f);
+        AudioManager.I.PlayBGM(AudioManager.I.horrorTheme, true);
+        AudioManager.I.FadeAudio(AudioManager.I.GetBGMSource(), 1f, 1.5f);
+    }
+
+    void UpdateAudio()
+    {
+        // Print current enemy audio volume
+        if (enemyAudio != null)
+            Debug.Log($"EnemyAudio Volume: {enemyAudio.volume}");
+
+        // Don’t play any sounds until enemy first sees the player
+        if (!hasActivatedAudio && playerInSight)
+        {
+            hasActivatedAudio = true;
+
+            // Switch to horror BGM once
+            AudioManager.I.PlayBGM(AudioManager.I.horrorTheme, true);
+            AudioManager.I.FadeAudio(AudioManager.I.GetBGMSource(), 1f, 1.5f);
+
+            // Begin chase sounds
+            AudioManager.I.PlayEnemyChaseLoop(enemyAudio);
+
+            return;
+        }
+
+        if (!hasActivatedAudio) return;
+
+        // State-based SFX
+        if (playerInSight)
+            AudioManager.I.PlayEnemyChaseLoop(enemyAudio);
+        else if (currentState == State.Investigate)
+            AudioManager.I.PlayEnemyInvestigateLoop(enemyAudio);
+        else if (currentState == State.Patrol)
+            AudioManager.I.PlayEnemyPatrolLoop(enemyAudio);
+
+        // Optional: dynamically adjust volume based on player distance
+        float dist = Vector2.Distance(transform.position, player.position);
+        float normalized = Mathf.InverseLerp(10f, 1f, dist); // closer = louder
+        float volume = Mathf.Lerp(0.2f, 1f, normalized);
+        AudioManager.I.SetSFXVolume(volume);
+
+        // Print what SFX volume AudioManager is using
+        Debug.Log($"AudioManager SFX Volume: {volume}");
+    }
+
+    void SwitchSFXLoop(AudioClip[] clips, float minInterval, float maxInterval)
+    {
+        // if already playing this type of loop, do nothing
+        if (AudioManager.I.CurrentClipArray == clips) return;
+
+        // stop old loop
+        if (currentSFXRoutine != null)
+        {
+            StopCoroutine(currentSFXRoutine);
+        }
+
+        // remember which clip set is active
+        AudioManager.I.CurrentClipArray = clips;
+
+        // start new loop
+        currentSFXRoutine = StartCoroutine(AudioManager.I.PlayRandomSFXCoroutine(clips, minInterval, maxInterval));
     }
 }
