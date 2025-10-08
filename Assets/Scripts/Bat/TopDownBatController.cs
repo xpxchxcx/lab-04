@@ -77,7 +77,7 @@ public class TopDownBatController : MonoBehaviour, IControllable
     private void OnMove(InputAction.CallbackContext ctx)
     {
         _moveInput = ctx.ReadValue<Vector2>();
-        Debug.Log(_moveInput);
+
         _batAnim.SetFloat("moveH", _moveInput.x);
         _batAnim.SetFloat("moveV", _moveInput.y);
 

@@ -90,7 +90,6 @@ public class HorrorEnemy : MonoBehaviour
             }
         }
 
-        Debug.Log($"State: {currentState}, PlayerInSight: {playerInSight}");
     }
 
     void FixedUpdate()
