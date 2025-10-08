@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
     {
         pauseMenu = GameObject.Find("PauseMenu");
         endScreen = GameObject.Find("EndScreen");
+        Debug.Log($"end screen exists : {endScreen}");
         if (pauseMenu != null)
         {
             Button resumeButton = pauseMenu.transform.Find("ResumeButton")?.GetComponent<Button>();

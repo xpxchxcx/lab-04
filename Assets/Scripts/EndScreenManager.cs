@@ -1,12 +1,20 @@
 using UnityEngine;
 using TMPro;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EndScreenManager : MonoBehaviour
 {
     public TMP_Text highScoresText;
+    public Button mainMenuButton;
 
     void Start()
     {
+
+        mainMenuButton?.onClick.RemoveAllListeners();
+        mainMenuButton?.onClick.AddListener(quitMainMenu);
+
         string display = "";
         int maxLevels = 2;
 
@@ -24,6 +32,15 @@ public class EndScreenManager : MonoBehaviour
         float totalTime = PlayerPrefs.GetFloat("CurrentTime", 0f);
         display += $"\nTotal Time: {totalTime:F2}s";
 
+
+
         highScoresText.text = display;
+    }
+
+    public void quitMainMenu()
+    {
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 }
