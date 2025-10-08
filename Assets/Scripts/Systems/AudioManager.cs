@@ -22,6 +22,7 @@ public class AudioManager : MonoBehaviour
     [Header("General SFX Clips")]
     public AudioClip enemyHit;
     public AudioClip pickup;
+    public AudioClip bigPoo;
 
     [Header("Enemy Clips")]
     public AudioClip[] patrolClips;
@@ -125,6 +126,9 @@ public class AudioManager : MonoBehaviour
         }
         src.volume = targetVol;
     }
+
+    public void PlayBigPoop() => PlaySFX(bigPoo);
+
 
     // =====================================================
     // STATE-BASED SOUND HELPERS (Now supports custom sources)
