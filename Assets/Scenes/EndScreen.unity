@@ -872,6 +872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   highScoresText: {fileID: 894898147}
+  mainMenuButton: {fileID: 581413130}
 --- !u!4 &1349944852
 Transform:
   m_ObjectHideFlags: 0
