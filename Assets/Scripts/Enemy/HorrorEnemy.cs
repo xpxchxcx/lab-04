@@ -221,9 +221,7 @@ public class HorrorEnemy : MonoBehaviour
 
     void UpdateAudio()
     {
-        // Print current enemy audio volume
-        if (enemyAudio != null)
-            Debug.Log($"EnemyAudio Volume: {enemyAudio.volume}");
+
 
         // Don’t play any sounds until enemy first sees the player
         if (!hasActivatedAudio && playerInSight)
