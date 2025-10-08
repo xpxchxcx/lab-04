@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject pauseMenu; // Only assign when in Level1
     private bool isPaused = false;
+    public int totalPoos = 0;
+
+
 
     private void Awake()
     {
@@ -22,17 +25,29 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+
     }
 
     private void OnEnable()
     {
         // Subscribe to scene loaded event
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        Poo.OnPooCollected += FoundPooDecrement;
+
     }
 
     private void OnDisable()
     {
         UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        Poo.OnPooCollected -= FoundPooDecrement;
+
+    }
+
+    private void FoundPooDecrement()
+    {
+        totalPoos -= 1;
+        Debug.Log($"Poo Left: {totalPoos}");
     }
 
     void Update()
@@ -60,6 +75,13 @@ public class GameManager : MonoBehaviour
             quitButton.onClick.AddListener(QuitToMainMenu);
 
             pauseMenu.SetActive(false);
+
+            Transform poopooParent = GameObject.Find("PooPoos")?.transform;
+            if (poopooParent != null)
+            {
+                totalPoos = poopooParent.childCount;
+                Debug.Log($"Total poos in scene: {totalPoos}");
+            }
         }
         else
         {
