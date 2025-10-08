@@ -17,6 +17,7 @@ public class MainCamera : MonoBehaviour
     {
         GetCamera();
         tempPlayerControllableGrabber();
+        AudioManager.I.PlayBGM(AudioManager.I.levelTheme, true);
     }
 
     void tempPlayerControllableGrabber()

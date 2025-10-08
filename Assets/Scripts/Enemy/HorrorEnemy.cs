@@ -90,7 +90,6 @@ public class HorrorEnemy : MonoBehaviour
             }
         }
 
-        Debug.Log($"State: {currentState}, PlayerInSight: {playerInSight}");
     }
 
     void FixedUpdate()
@@ -254,8 +253,7 @@ public class HorrorEnemy : MonoBehaviour
         float volume = Mathf.Lerp(0.2f, 1f, normalized);
         AudioManager.I.SetSFXVolume(volume);
 
-        // Print what SFX volume AudioManager is using
-        Debug.Log($"AudioManager SFX Volume: {volume}");
+
     }
 
     void SwitchSFXLoop(AudioClip[] clips, float minInterval, float maxInterval)
