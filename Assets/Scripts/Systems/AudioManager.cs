@@ -18,9 +18,11 @@ public class AudioManager : MonoBehaviour
     [Header("Music Clips")]
     public AudioClip levelTheme;
     public AudioClip horrorTheme;
+    public AudioClip MainMenuTheme;
+    public AudioClip victoryTheme;
 
     [Header("General SFX Clips")]
-    public AudioClip enemyHit;
+    public AudioClip sonarSound;
     public AudioClip pickup;
     public AudioClip bigPoo;
 
@@ -42,7 +44,7 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        PlayBGM(levelTheme, true);
+        PlayMainMenuTheme();
     }
 
     // -----------------------------
@@ -128,8 +130,10 @@ public class AudioManager : MonoBehaviour
     }
 
     public void PlayBigPoop() => PlaySFX(bigPoo);
-
-
+    public void PlaySonar() => PlaySFX(sonarSound);
+    public void PlayPickup() => PlaySFX(pickup);
+    public void PlayMainMenuTheme() => PlayBGM(MainMenuTheme, true);
+    public void PlayVictoryTheme() => PlayBGM(victoryTheme, false);
     // =====================================================
     // STATE-BASED SOUND HELPERS (Now supports custom sources)
     // =====================================================

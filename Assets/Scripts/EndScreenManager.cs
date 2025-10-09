@@ -9,6 +9,9 @@ public class EndScreenManager : MonoBehaviour
 
     void Start()
     {
+        AudioManager.I.PlayVictoryTheme();
+
+
         string display = "";
         int maxLevels = 2;
 
