@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
     [Header("Music Clips")]
     public AudioClip levelTheme;
     public AudioClip horrorTheme;
+    public AudioClip MainMenuTheme;
 
     [Header("General SFX Clips")]
     public AudioClip enemyHit;
@@ -42,7 +43,7 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        PlayBGM(levelTheme, true);
+        PlayMainMenuTheme();
     }
 
     // -----------------------------
@@ -129,7 +130,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBigPoop() => PlaySFX(bigPoo);
 
-
+    public void PlayMainMenuTheme() => PlayBGM(MainMenuTheme, true);
     // =====================================================
     // STATE-BASED SOUND HELPERS (Now supports custom sources)
     // =====================================================
