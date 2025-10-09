@@ -33,6 +33,9 @@ public class Powerup : MonoBehaviour
 
             // Start coroutine to fade back smoothly
             StartCoroutine(FadeBackToOriginal(globalDarkness, originalColor));
+
+            // Play pickup sound
+            AudioManager.I.PlayPickup();
         }
     }
     private IEnumerator FadeBackToOriginal(Light2D light, Color originalColor)

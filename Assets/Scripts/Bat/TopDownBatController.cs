@@ -67,6 +67,7 @@ public class TopDownBatController : MonoBehaviour, IControllable
     {
         if (Time.time - lastSonarTime < sonarCooldown) return;
 
+        AudioManager.I.PlaySonar();
         Vector3 spawnPos = sonarSpawnPoint ? sonarSpawnPoint.position : transform.position;
         Instantiate(sonarPulsePrefab, spawnPos, Quaternion.identity);
 

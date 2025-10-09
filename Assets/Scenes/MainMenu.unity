@@ -716,6 +716,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3745875923903959984, guid: 835055faeb2cb48abb8bf32d641f4484, type: 3}
+      propertyPath: pickup
+      value: 
+      objectReference: {fileID: 8300000, guid: cdfbd82e947ec4919b37f71b0764700e, type: 3}
+    - target: {fileID: 3745875923903959984, guid: 835055faeb2cb48abb8bf32d641f4484, type: 3}
+      propertyPath: sonarSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e62c516cffd834684b2e4a24424e635c, type: 3}
+    - target: {fileID: 3745875923903959984, guid: 835055faeb2cb48abb8bf32d641f4484, type: 3}
+      propertyPath: victoryTheme
+      value: 
+      objectReference: {fileID: 8300000, guid: 2f203e288573d4c0493c6f72f83c9cf5, type: 3}
     - target: {fileID: 6509853789966188217, guid: 835055faeb2cb48abb8bf32d641f4484, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
