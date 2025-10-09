@@ -6,6 +6,7 @@ public class GameData : ScriptableObject
     [Header("Progress")]
     public int currentLevel = 1;
     public float totalTime = 0f;
+    public bool isPause = false;
 
     [Header("High Scores")]
     public float[] highScores;
@@ -30,6 +31,7 @@ public class GameData : ScriptableObject
     {
         currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
         totalTime = PlayerPrefs.GetFloat("TotalTime", 0f);
+        isPause = PlayerPrefs.GetInt("isPause", 0) == 1;
 
         if (highScores == null)
             highScores = new float[2]; // fallback for first run
@@ -45,6 +47,7 @@ public class GameData : ScriptableObject
     {
         PlayerPrefs.SetInt("CurrentLevel", currentLevel);
         PlayerPrefs.SetFloat("TotalTime", totalTime);
+        PlayerPrefs.SetInt("isPause", isPause ? 1 : 0);
 
         for (int i = 0; i < highScores.Length; i++)
         {
@@ -59,6 +62,7 @@ public class GameData : ScriptableObject
     {
         currentLevel = 1;
         totalTime = 0f;
+        isPause = false;
         if (highScores == null)
             highScores = new float[2];
         for (int i = 0; i < highScores.Length; i++)

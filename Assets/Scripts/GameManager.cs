@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public TMP_Text timerText;
+    public TMP_Text highscoreValueText;
 
     private bool levelCompleted = false;
 
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            isPaused = false;
             DontDestroyOnLoad(gameObject);
             gameData.Initialize(maxLevels: 2);
             gameData.LoadFromPrefs();
@@ -95,14 +97,21 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Transform poosParent = GameObject.Find("PooPoos")?.transform;
-        totalPoos = poosParent != null ? poosParent.childCount : 0;
+        string sceneName = scene.name;
 
-        levelTimer = 0f;
-        timerRunning = true;
+        // Only initialize gameplay scenes
+        if (sceneName.StartsWith("Level"))
+        {
+            Transform poosParent = GameObject.Find("PooPoos")?.transform;
+            totalPoos = poosParent != null ? poosParent.childCount : 0;
 
-        timerText = GameObject.Find("TimerText")?.GetComponent<TMP_Text>();
-        UpdateUI();
+            levelTimer = 0f;
+            timerRunning = true;
+
+            timerText = GameObject.Find("TimerText")?.GetComponent<TMP_Text>();
+            highscoreValueText = GameObject.Find("ScoreValue")?.GetComponent<TMP_Text>();
+            UpdateUI();
+        }
     }
 
     public void PauseGame()
@@ -132,6 +141,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Quit to main menu called");
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
+        isPaused = false;
     }
 
     public void StartGame()
@@ -140,6 +150,7 @@ public class GameManager : MonoBehaviour
         gameData.currentLevel = 1;
         gameData.totalTime = 0f;
         gameData.currentRunTime = 0f;
+        gameData.isPause = false;
 
         // Keep previous highscores intact
         gameData.SaveToPrefs();
@@ -151,6 +162,22 @@ public class GameManager : MonoBehaviour
     {
         if (timerText != null)
             timerText.text = $"Time: {levelTimer:F2}s\nPoo Left: {totalPoos}";
+
+        float totalHigh = 0f;
+        bool hasHigh = false;
+
+        for (int i = 0; i < gameData.highScores.Length; i++)
+        {
+            if (gameData.highScores[i] >= 0f)
+            {
+                totalHigh += gameData.highScores[i];
+                hasHigh = true;
+            }
+        }
+
+        if (highscoreValueText != null)
+            highscoreValueText.text = $"{(hasHigh ? $"{totalHigh:F2}s" : "None")}";
+
     }
 
     private void LevelComplete()
