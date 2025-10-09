@@ -644,6 +644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EndScreenManager
   highScoresText: {fileID: 894898147}
+  gameData: {fileID: 11400000, guid: 2a69b080273d44af4bdcc643ea64793a, type: 2}
 --- !u!1 &1043077706
 GameObject:
   m_ObjectHideFlags: 0

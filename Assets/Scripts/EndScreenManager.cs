@@ -1,36 +1,23 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class EndScreenManager : MonoBehaviour
 {
     public TMP_Text highScoresText;
-
+    public GameData gameData;
     void Start()
     {
         AudioManager.I.PlayVictoryTheme();
 
-
         string display = "";
-        int maxLevels = 2;
-
-        for (int i = 1; i <= maxLevels; i++)
+        for (int i = 0; i < gameData.highScores.Length; i++)
         {
-            string highKey = $"HighScore_Level {i}";
-            string runKey = $"CurrentRun_Level {i}";
-
-            float highScore = PlayerPrefs.HasKey(highKey) ? PlayerPrefs.GetFloat(highKey) : 0f;
-            float thisRun = PlayerPrefs.HasKey(runKey) ? PlayerPrefs.GetFloat(runKey) : 0f;
-
-            display += $"Level {i} High Score: {highScore:F2}s (This Run: {thisRun:F2}s)\n";
+            float high = gameData.highScores[i];
+            string highScoreText = (high < 0f) ? "N/A" : $"{high:F2}s";
+            display += $"Level {i + 1} High Score: {highScoreText}\n";
         }
 
-        float totalTime = PlayerPrefs.GetFloat("CurrentTime", 0f);
-        display += $"\nTotal Time: {totalTime:F2}s";
-
-
-
+        display += $"\nTotal Time: {gameData.totalTime:F2}s";
         highScoresText.text = display;
     }
 

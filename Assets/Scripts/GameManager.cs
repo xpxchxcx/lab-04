@@ -6,6 +6,8 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Game Data")]
+    public GameData gameData;
     public static GameManager instance;
 
     [Header("Pause Menu")]
@@ -30,12 +32,16 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            gameData.Initialize(maxLevels: 2);
+            gameData.LoadFromPrefs();
         }
         else
         {
             Destroy(gameObject);
         }
     }
+
+
 
     private void OnEnable()
     {
@@ -108,16 +114,8 @@ public class GameManager : MonoBehaviour
 
     private void OnBatDeath()
     {
-        levelCompleted = false;         // mark as failed
-        timerRunning = false;
-        levelTimer = 0f;                // this run = 0
-        Debug.Log("Player died. Level failed. Run score = 0");
-
-        // Save 0 for this run so EndScreen shows 0
-        string levelName = SceneManager.GetActiveScene().name;
-        PlayerPrefs.SetFloat($"CurrentRun_{levelName}", 0f);
-        PlayerPrefs.Save();
-
+        gameData.currentRunTime = 0f;
+        gameData.SaveToPrefs();
         SceneManager.LoadScene("EndScreen");
     }
 
@@ -139,10 +137,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        PlayerPrefs.SetFloat("CurrentTime", 0f);
-        PlayerPrefs.SetInt("CurrentLevel", 1);
+        gameData.ResetData();
+        gameData.SaveToPrefs();
         SceneManager.LoadScene("Level 1");
-        isPaused = false;
     }
 
     private void UpdateUI()
@@ -156,37 +153,25 @@ public class GameManager : MonoBehaviour
         timerRunning = false;
         Debug.Log($"Level complete! Time: {levelTimer:F2}s");
 
-        if (!levelCompleted)
-        {
-            Debug.Log("Level failed. Score ignored.");
-            return; // don't save anything
-        }
-
         string levelName = SceneManager.GetActiveScene().name;
+        int levelIndex = gameData.currentLevel - 1;
 
-        // Save all-time high score
-        string levelKey = $"HighScore_{levelName}";
-        float prevBest = PlayerPrefs.GetFloat(levelKey, float.MaxValue);
-        if (levelTimer < prevBest)
+        // update high score if new best
+        if (gameData.highScores[levelIndex] < 0f || levelTimer < gameData.highScores[levelIndex])
         {
-            PlayerPrefs.SetFloat(levelKey, levelTimer);
+            gameData.highScores[levelIndex] = levelTimer;
             Debug.Log("New High Score!");
         }
 
-        // Save this run
-        PlayerPrefs.SetFloat($"CurrentRun_{levelName}", levelTimer);
+        // update current run and total time
+        gameData.currentRunTime = levelTimer;
+        gameData.totalTime += levelTimer;
 
-        // Update cumulative time
-        float totalTime = PlayerPrefs.GetFloat("CurrentTime", 0f);
-        totalTime += levelTimer;
-        PlayerPrefs.SetFloat("CurrentTime", totalTime);
+        // go to next level
+        gameData.currentLevel++;
+        gameData.SaveToPrefs();
 
-        // Next level
-        int nextLevel = PlayerPrefs.GetInt("CurrentLevel", 1) + 1;
-        PlayerPrefs.SetInt("CurrentLevel", nextLevel);
-        PlayerPrefs.Save();
-
-        string nextLevelName = $"Level {nextLevel}";
+        string nextLevelName = $"Level {gameData.currentLevel}";
         if (Application.CanStreamedLevelBeLoaded(nextLevelName))
             SceneManager.LoadScene(nextLevelName);
         else
