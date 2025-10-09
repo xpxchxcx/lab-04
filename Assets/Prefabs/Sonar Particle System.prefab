@@ -4927,5 +4927,8 @@ MonoBehaviour:
   lightDuration: 1
   lightIntensity: 1.15
   collisionRadius: 0.15
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 64
   debugHitColor: {r: 1, g: 0, b: 0, a: 1}
   debugMissColor: {r: 0, g: 1, b: 0, a: 1}

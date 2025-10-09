@@ -9,19 +9,23 @@ public class ParticleTrailLight : MonoBehaviour
     public string specialTag = "teoenming"; // Enemy tag
     public float lightDuration = 0.1f;
     public float lightIntensity = 1f;
-    public float collisionRadius = 0.15f; // Radius to detect enemies
+    public float collisionRadius = 0.15f; // For ray thickness
+    public LayerMask environmentLayer; // assign Environment layer here
     public Color debugHitColor = Color.red;
     public Color debugMissColor = Color.green;
 
     private ParticleSystem.Particle[] particles;
+    private Vector3[] prevPositions; // track previous positions for raycast
 
     void Start()
     {
         if (ps == null)
             ps = GetComponent<ParticleSystem>();
 
-        if (particles == null || particles.Length < ps.main.maxParticles)
-            particles = new ParticleSystem.Particle[ps.main.maxParticles];
+        int maxParticles = ps.main.maxParticles;
+        if (particles == null || particles.Length < maxParticles)
+            particles = new ParticleSystem.Particle[maxParticles];
+        prevPositions = new Vector3[maxParticles];
     }
 
     void LateUpdate()
@@ -31,47 +35,55 @@ public class ParticleTrailLight : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Vector3 worldPos = ps.transform.TransformPoint(particles[i].position);
+            Vector3 prevPos = prevPositions[i];
+            prevPositions[i] = worldPos; // store for next frame
 
-            // Find all colliders in the radius
-            Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, collisionRadius);
-            Collider2D hitEnemy = null;
+            // --- always spawn default trail light like before ---
+            Light2D trailLight = Instantiate(defaultLightPrefab, worldPos, Quaternion.identity);
+            trailLight.intensity = lightIntensity;
+            Destroy(trailLight.gameObject, lightDuration);
+            DebugDrawCircle(worldPos, collisionRadius, debugMissColor);
 
-            // Check for a collider with the special tag
-            foreach (Collider2D c in hits)
+            // skip the first frame for new particles
+            if (prevPos == Vector3.zero)
+                continue;
+
+            // ray direction and distance
+            Vector2 dir = worldPos - prevPos;
+            float dist = dir.magnitude;
+            if (dist <= 0.001f)
+                continue;
+
+            // perform raycast to detect collisions
+            RaycastHit2D hit = Physics2D.CircleCast(prevPos, collisionRadius, dir.normalized, dist, environmentLayer);
+
+            if (hit.collider != null)
             {
-                if (c.CompareTag(specialTag))
+                Light2D lightInstance;
+
+                // check if hit enemy
+                if (hit.collider.CompareTag(specialTag))
                 {
-                    hitEnemy = c;
-                    break;
+                    // special light (temporary)
+                    lightInstance = Instantiate(specialLightPrefab, hit.point, Quaternion.identity);
+                    lightInstance.intensity = lightIntensity;
+                    Debug.Log($"Particle hit enemy '{hit.collider.name}' at {hit.point}");
+                    DebugDrawCircle(hit.point, collisionRadius, debugHitColor);
+                    Destroy(lightInstance.gameObject, lightDuration);
+                }
+                else
+                {
+                    // environment hit → persistent light
+                    lightInstance = Instantiate(defaultLightPrefab, hit.point, Quaternion.identity);
+                    lightInstance.intensity = lightIntensity;
+                    Debug.Log($"Particle hit environment '{hit.collider.name}' at {hit.point}. Persistent light placed.");
+                    DebugDrawCircle(hit.point, collisionRadius, debugMissColor);
+                    // persistent — no destroy
                 }
             }
-
-            Light2D lightInstance;
-
-            if (hitEnemy != null)
-            {
-                // Spawn special light
-                lightInstance = Instantiate(specialLightPrefab, worldPos, Quaternion.identity);
-                lightInstance.intensity = lightIntensity;
-
-                Debug.Log($"Particle hit enemy '{hitEnemy.name}'. Using SPECIAL light at {worldPos}.");
-                DebugDrawCircle(worldPos, collisionRadius, debugHitColor);
-            }
-            else
-            {
-                // Spawn default light
-                lightInstance = Instantiate(defaultLightPrefab, worldPos, Quaternion.identity);
-                lightInstance.intensity = lightIntensity;
-
-                Debug.Log($"• Particle at {worldPos} hit nothing. Using DEFAULT light.");
-                DebugDrawCircle(worldPos, collisionRadius, debugMissColor);
-            }
-
-            Destroy(lightInstance.gameObject, lightDuration);
         }
     }
 
-    // Draw debug circle in Scene view
     void DebugDrawCircle(Vector3 center, float radius, Color color)
     {
         int segments = 12;
