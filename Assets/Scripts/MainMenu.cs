@@ -3,11 +3,9 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public Button startButton;
-
-    void Start()
+    public void OnStartClicked()
     {
-        startButton.onClick.RemoveAllListeners();
-        startButton.onClick.AddListener(() => GameManager.instance.StartGame());
+        if (GameManager.instance != null)
+            GameManager.instance.StartGame();
     }
 }

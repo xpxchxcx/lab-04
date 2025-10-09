@@ -1,20 +1,14 @@
 using UnityEngine;
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EndScreenManager : MonoBehaviour
 {
     public TMP_Text highScoresText;
-    public Button mainMenuButton;
 
     void Start()
     {
-
-        mainMenuButton?.onClick.RemoveAllListeners();
-        mainMenuButton?.onClick.AddListener(quitMainMenu);
-
         string display = "";
         int maxLevels = 2;
 
@@ -37,10 +31,15 @@ public class EndScreenManager : MonoBehaviour
         highScoresText.text = display;
     }
 
-    public void quitMainMenu()
+    public void OnRestartClicked()
     {
+        if (GameManager.instance != null)
+            GameManager.instance.StartGame();
+    }
 
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+    public void OnQuitClicked()
+    {
+        if (GameManager.instance != null)
+            GameManager.instance.QuitToMainMenu();
     }
 }
