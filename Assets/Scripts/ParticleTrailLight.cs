@@ -59,6 +59,8 @@ public class ParticleTrailLight : MonoBehaviour
 
             if (hit.collider != null)
             {
+                Debug.Log($"Hit '{hit.collider.name}' on layer '{LayerMask.LayerToName(hit.collider.gameObject.layer)}'");
+
                 // if hit enemy (teoenming)
                 if (hit.collider.CompareTag(specialTag))
                 {

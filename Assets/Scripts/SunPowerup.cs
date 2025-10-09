@@ -30,11 +30,12 @@ public class SunPowerup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AudioManager.I.PlayPickup();
             if (sr != null) sr.enabled = false;
             if (col != null) col.enabled = false;
 
             var rate = emission.rateOverTime;
-            rate.constant = boostedRate; 
+            rate.constant = boostedRate;
             emission.rateOverTime = rate;
 
             StartCoroutine(RevertEmissionRate());

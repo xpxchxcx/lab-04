@@ -115,7 +115,6 @@ public class GameManager : MonoBehaviour
     private void OnBatDeath()
     {
         gameData.currentRunTime = 0f;
-        gameData.SaveToPrefs();
         SceneManager.LoadScene("EndScreen");
     }
 
@@ -137,8 +136,14 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        gameData.ResetData();
+        // Only reset progress for a new run, not high scores
+        gameData.currentLevel = 1;
+        gameData.totalTime = 0f;
+        gameData.currentRunTime = 0f;
+
+        // Keep previous highscores intact
         gameData.SaveToPrefs();
+
         SceneManager.LoadScene("Level 1");
     }
 
