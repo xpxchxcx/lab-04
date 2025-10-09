@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("Pause Menu")]
-    public GameObject pauseMenu;
-    public GameObject endScreen;
     private bool isPaused = false;
 
     [Header("Poo Tracking")]
@@ -69,8 +67,17 @@ public class GameManager : MonoBehaviour
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (!isPaused) PauseGame();
-            else ResumeGame();
+            // Get the current scene name
+            string sceneName = SceneManager.GetActiveScene().name;
+
+            // Only allow pause/resume in gameplay scenes
+            if (sceneName.StartsWith("Level"))
+            {
+                if (!isPaused)
+                    PauseGame();
+                else
+                    ResumeGame();
+            }
         }
 
         if (timerRunning && !isPaused)
@@ -82,29 +89,6 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        pauseMenu = GameObject.Find("PauseMenu");
-        endScreen = GameObject.Find("EndScreen");
-        Debug.Log($"end screen exists : {endScreen}");
-        if (pauseMenu != null)
-        {
-            Button resumeButton = pauseMenu.transform.Find("ResumeButton")?.GetComponent<Button>();
-            resumeButton?.onClick.RemoveAllListeners();
-            resumeButton?.onClick.AddListener(ResumeGame);
-
-            Button quitButton = pauseMenu.transform.Find("QuitButton")?.GetComponent<Button>();
-            quitButton?.onClick.RemoveAllListeners();
-            quitButton?.onClick.AddListener(QuitToMainMenu);
-
-            pauseMenu.SetActive(false);
-        }
-        if (endScreen)
-        {
-            Button mainMenuButton = endScreen.transform.Find("HomeButton")?.GetComponent<Button>();
-            mainMenuButton?.onClick.RemoveAllListeners();
-            mainMenuButton?.onClick.AddListener(QuitToMainMenu);
-
-        }
-
         Transform poosParent = GameObject.Find("PooPoos")?.transform;
         totalPoos = poosParent != null ? poosParent.childCount : 0;
 
@@ -117,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        if (pauseMenu != null) pauseMenu.SetActive(true);
+        SceneManager.LoadScene("PauseMenu", LoadSceneMode.Additive);
         Time.timeScale = 0f;
         isPaused = true;
     }
@@ -140,8 +124,7 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         Debug.Log("resume  called");
-
-        if (pauseMenu != null) pauseMenu.SetActive(false);
+        SceneManager.UnloadSceneAsync("PauseMenu");
         Time.timeScale = 1f;
         isPaused = false;
     }
@@ -158,6 +141,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("CurrentTime", 0f);
         PlayerPrefs.SetInt("CurrentLevel", 1);
         SceneManager.LoadScene("Level 1");
+        isPaused = false;
     }
 
     private void UpdateUI()
