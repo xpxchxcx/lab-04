@@ -10,8 +10,7 @@ public class EndScreenManager : MonoBehaviour
     void Start()
     {
         AudioManager.I.PlayVictoryTheme();
-        mainMenuButton?.onClick.RemoveAllListeners();
-        mainMenuButton?.onClick.AddListener(quitMainMenu);
+
 
         string display = "";
         int maxLevels = 2;
