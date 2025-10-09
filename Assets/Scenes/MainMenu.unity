@@ -740,7 +740,7 @@ PrefabInstance:
     - target: {fileID: 3745875923903959984, guid: 835055faeb2cb48abb8bf32d641f4484, type: 3}
       propertyPath: victoryTheme
       value: 
-      objectReference: {fileID: 8300000, guid: 2f203e288573d4c0493c6f72f83c9cf5, type: 3}
+      objectReference: {fileID: 8300000, guid: 35470b2463bdf483fb922acbf66232b6, type: 3}
     - target: {fileID: 6509853789966188217, guid: 835055faeb2cb48abb8bf32d641f4484, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

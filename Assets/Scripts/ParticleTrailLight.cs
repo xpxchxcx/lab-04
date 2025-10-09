@@ -54,29 +54,28 @@ public class ParticleTrailLight : MonoBehaviour
             if (dist <= 0.001f)
                 continue;
 
-            // perform raycast to detect collisions
-            RaycastHit2D hit = Physics2D.CircleCast(prevPos, collisionRadius, dir.normalized, dist, environmentLayer);
+            // perform raycast for anything
+            RaycastHit2D hit = Physics2D.CircleCast(prevPos, collisionRadius, dir.normalized, dist);
 
             if (hit.collider != null)
             {
-                Light2D lightInstance;
-
-                // check if hit enemy
+                // if hit enemy (teoenming)
                 if (hit.collider.CompareTag(specialTag))
                 {
-                    // special light (temporary)
-                    lightInstance = Instantiate(specialLightPrefab, hit.point, Quaternion.identity);
-                    lightInstance.intensity = lightIntensity;
-                    Debug.Log($"Particle hit enemy '{hit.collider.name}' at {hit.point}");
+                    // spawn SPECIAL light (temporary)
+                    Light2D special = Instantiate(specialLightPrefab, hit.point, Quaternion.identity);
+                    special.intensity = lightIntensity;
+                    Debug.Log($"Particle hit ENEMY '{hit.collider.name}' at {hit.point}");
                     DebugDrawCircle(hit.point, collisionRadius, debugHitColor);
-                    Destroy(lightInstance.gameObject, lightDuration);
+                    Destroy(special.gameObject, lightDuration);
                 }
-                else
+                // else if hit environment (based on layer)
+                else if (((1 << hit.collider.gameObject.layer) & environmentLayer) != 0)
                 {
-                    // environment hit → persistent light
-                    lightInstance = Instantiate(defaultLightPrefab, hit.point, Quaternion.identity);
-                    lightInstance.intensity = lightIntensity;
-                    Debug.Log($"Particle hit environment '{hit.collider.name}' at {hit.point}. Persistent light placed.");
+                    // spawn persistent DEFAULT light
+                    Light2D envLight = Instantiate(defaultLightPrefab, hit.point, Quaternion.identity);
+                    envLight.intensity = lightIntensity;
+                    Debug.Log($"Particle hit ENVIRONMENT '{hit.collider.name}' at {hit.point}. Persistent light placed.");
                     DebugDrawCircle(hit.point, collisionRadius, debugMissColor);
                     // persistent — no destroy
                 }
