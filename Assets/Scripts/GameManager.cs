@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text timerText;
     public TMP_Text highscoreValueText;
 
-    private bool levelCompleted = false;
 
     private void Awake()
     {
