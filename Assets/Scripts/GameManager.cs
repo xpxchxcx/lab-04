@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
 
         if (totalPoos <= 0)
         {
-            levelCompleted = true;
             LevelComplete();
         }
     }
