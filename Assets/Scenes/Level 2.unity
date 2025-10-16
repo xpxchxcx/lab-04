@@ -33905,10 +33905,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3725ba9eddd5846b6885a2e3fead0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level2Manager
-  gameData: {fileID: 0}
+  gameData: {fileID: 11400000, guid: 2a69b080273d44af4bdcc643ea64793a, type: 2}
   totalPoos: 0
-  timerText: {fileID: 0}
-  highscoreValueText: {fileID: 0}
+  timerText: {fileID: 1661613442}
+  highscoreValueText: {fileID: 892180485}
   levelComplete:
     m_PersistentCalls:
       m_Calls:
