@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class EndScreenManager : MonoBehaviour
 {
@@ -86,15 +88,25 @@ public class EndScreenManager : MonoBehaviour
         }
     }
 
-    public void OnRestartClicked()
+    public void StartGame()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.StartGame();
+        // Only reset progress for a new run, not high scores
+        gameData.currentLevel = 1;
+        gameData.totalTime = 0f;
+        gameData.currentRunTime = 0f;
+        gameData.isPause = false;
+
+        // Keep previous highscores intact
+        gameData.SaveToPrefs();
+
+        SceneManager.LoadScene("Level 1");
     }
 
-    public void OnQuitClicked()
+    public void QuitToMainMenu()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.QuitToMainMenu();
+        AudioManager.I.PlayMainMenuTheme();
+        Debug.Log("Quit to main menu called");
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 }

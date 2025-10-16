@@ -204,7 +204,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1023183414}
         m_TargetAssemblyTypeName: EndScreenManager, Assembly-CSharp
-        m_MethodName: OnQuitClicked
+        m_MethodName: QuitToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -871,7 +871,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1023183414}
         m_TargetAssemblyTypeName: EndScreenManager, Assembly-CSharp
-        m_MethodName: OnRestartClicked
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
