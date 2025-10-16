@@ -23,15 +23,6 @@ public class Level2Manager : MonoBehaviour
     public TMP_Text timerText;
     public TMP_Text highscoreValueText;
 
-    [Header("Events")]
-    public UnityEvent levelComplete;
-    public UnityEvent gameOver;
-    public UnityEvent gameQuit;
-    public UnityEvent gamePaused;
-    public UnityEvent gameResumed;
-    public UnityEvent pooCollected;
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -70,7 +61,7 @@ public class Level2Manager : MonoBehaviour
 
         if (totalPoos <= 0)
         {
-            levelComplete.Invoke();
+            SceneManager.LoadScene("EndScreen");
         }
     }
 
