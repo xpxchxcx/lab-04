@@ -33653,6 +33653,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11400000, guid: 1cee630949c2ddf488f87ce11e2f26d9, type: 2}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Raise
+      objectReference: {fileID: 0}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SimpleGameEvent, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 651877967581908829, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
+      propertyPath: onGameOver.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6637038853185287882, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
       propertyPath: m_Name
       value: Bat

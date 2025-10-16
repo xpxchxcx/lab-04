@@ -1,12 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class TopDownBatController : MonoBehaviour, IControllable
 {
-    public static event Action OnBatDeath;
-
     [Header("Sonar")]
     public GameObject sonarPulsePrefab;
     public Transform sonarSpawnPoint;
@@ -45,6 +44,8 @@ public class TopDownBatController : MonoBehaviour, IControllable
     private bool _cameraSettingsChanged = false;
 
     private Animator _batAnim;
+
+    public UnityEvent onGameOver;
 
     private void Awake()
     {
@@ -185,7 +186,7 @@ public class TopDownBatController : MonoBehaviour, IControllable
     {
         if (collision.gameObject.CompareTag("teoenming"))
         {
-            OnBatDeath.Invoke();
+            onGameOver.Invoke();
         }
     }
 }
