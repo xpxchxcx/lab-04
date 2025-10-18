@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2731880650245160429}
   - component: {fileID: 7989399865491101052}
   m_Layer: 0
-  m_Name: Powerup
+  m_Name: FlashlightPowerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
