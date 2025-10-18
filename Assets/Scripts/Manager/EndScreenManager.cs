@@ -1,8 +1,11 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class EndScreenManager : MonoBehaviour
 {
+    public UnityEvent OnEndTheme;
     [Header("Per-Level Texts")]
     public TMP_Text[] levelHighScoreTexts;
     public TMP_Text[] levelCurrentScoreTexts;
@@ -19,7 +22,7 @@ public class EndScreenManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.I.PlayVictoryTheme();
+        OnEndTheme.Invoke();
 
         bool died = gameData.currentRunTime <= 0f; // if 0, player died
         bool finishedAll = gameData.currentLevel > gameData.highScores.Length;
@@ -86,15 +89,28 @@ public class EndScreenManager : MonoBehaviour
         }
     }
 
-    public void OnRestartClicked()
+
+
+
+    public void QuitToMainMenu()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.StartGame();
+        Debug.Log("Quit to main menu called");
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 
-    public void OnQuitClicked()
+    public void StartGame()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.QuitToMainMenu();
+        // Only reset progress for a new run, not high scores
+        gameData.currentLevel = 1;
+        gameData.totalTime = 0f;
+        gameData.currentRunTime = 0f;
+        gameData.isPause = false;
+
+        // Keep previous highscores intact
+        gameData.SaveToPrefs();
+
+        SceneManager.LoadScene("Level 1");
     }
+
 }

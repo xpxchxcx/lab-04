@@ -1,9 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 public class SunPowerup : MonoBehaviour
 {
+    public UnityEvent onPowerupCollected;
     public ParticleSystem particleSystemPrefab;
     public float startRate = 20f;
     public float boostedRate = 50f;
@@ -30,7 +32,7 @@ public class SunPowerup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            AudioManager.I.PlayPickup();
+            onPowerupCollected.Invoke();
             if (sr != null) sr.enabled = false;
             if (col != null) col.enabled = false;
 

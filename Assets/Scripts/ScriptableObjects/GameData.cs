@@ -9,8 +9,7 @@ public class GameData : ScriptableObject
     public bool isPause = false;
 
     [Header("High Scores")]
-    public float[] highScores;
-
+    public float[] highScores = new float[2] { -1f, -1f };
     [Header("Current Run Data")]
     public float currentRunTime = 0f;
 

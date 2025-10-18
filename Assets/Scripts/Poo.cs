@@ -1,10 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class Poo : MonoBehaviour
 {
-    public static event Action OnPooCollected;
+
+    public UnityEvent OnPooPooCollected;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,10 +22,13 @@ public class Poo : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log($"colldied with: {collision.name}");
         if (collision.CompareTag("Player"))
         {
-            OnPooCollected.Invoke();
-            AudioManager.I.PlayBigPoop();
+
+            OnPooPooCollected.Invoke();
+            Debug.Log("POOPOOCOLLECTED! raised from poo!");
+            //AudioManager.I.PlayBigPoop();
             this.gameObject.SetActive(false);
         }
     }

@@ -235,6 +235,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88df73944b841843b1b50f23c60b02c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  onPowerupCollected:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: c2af51794b61c06ac8174f9546dab1fc, type: 2}
+        m_TargetAssemblyTypeName: SimpleGameEvent, Assembly-CSharp
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   particleSystemPrefab: {fileID: 7416568013014115657, guid: 756748325f2cce81f87bb912d5b2fd6a, type: 3}
   startRate: 20
   boostedRate: 50

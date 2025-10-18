@@ -1,11 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    public UnityEvent OnStartGameEvent;
     public void OnStartClicked()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.StartGame();
+        OnStartGameEvent.Invoke();
     }
 }

@@ -1,11 +1,13 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class TopDownBatController : MonoBehaviour, IControllable
 {
-    public static event Action OnBatDeath;
+    public UnityEvent OnBatDeath;
+    public UnityEvent OnSonarPulse;
 
     [Header("Sonar")]
     public GameObject sonarPulsePrefab;
@@ -67,7 +69,7 @@ public class TopDownBatController : MonoBehaviour, IControllable
     {
         if (Time.time - lastSonarTime < sonarCooldown) return;
 
-        AudioManager.I.PlaySonar();
+        OnSonarPulse.Invoke();
         Vector3 spawnPos = sonarSpawnPoint ? sonarSpawnPoint.position : transform.position;
         Instantiate(sonarPulsePrefab, spawnPos, Quaternion.identity);
 

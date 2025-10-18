@@ -1,9 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 public class Powerup : MonoBehaviour
 {
+    public UnityEvent onPowerupCollected;
     public Light2D globalDarkness;
     public Color boostedColor = new Color(100f / 255f, 100f / 255f, 100f / 255f);
     public float brightDuration = 2f; // time light stays fully bright
@@ -22,6 +24,7 @@ public class Powerup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            onPowerupCollected.Invoke();
             // Store original color
             Color originalColor = globalDarkness.color;
 
@@ -34,8 +37,6 @@ public class Powerup : MonoBehaviour
             // Start coroutine to fade back smoothly
             StartCoroutine(FadeBackToOriginal(globalDarkness, originalColor));
 
-            // Play pickup sound
-            AudioManager.I.PlayPickup();
         }
     }
     private IEnumerator FadeBackToOriginal(Light2D light, Color originalColor)

@@ -1,16 +1,17 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PauseMenuUI : MonoBehaviour
 {
+    public UnityEvent OnResumeEvent;
+    public UnityEvent OnQuitToMainMenuEvent;
     public void OnResumeClicked()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.ResumeGame();
+        OnResumeEvent.Invoke();
     }
 
     public void OnQuitClicked()
     {
-        if (GameManager.instance != null)
-            GameManager.instance.QuitToMainMenu();
+        OnQuitToMainMenuEvent.Invoke();
     }
 }
