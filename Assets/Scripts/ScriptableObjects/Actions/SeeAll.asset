@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c2c70ed21094a44ba1908ce3967463, type: 3}
   m_Name: SeeAll
   m_EditorClassIdentifier: Assembly-CSharp::SeeAllAction
-  globalDarkness: {fileID: 0}
+  globalDarkness: {fileID: 2421107657795027566, guid: 3b58f979e7e07433fb29a70db6684dfc, type: 3}
   boostedColor: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
   brightDuration: 2
   fadeDuration: 1

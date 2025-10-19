@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f319beccbf742699cd85545133a078, type: 3}
   m_Name: DefaultBat
   m_EditorClassIdentifier: Assembly-CSharp::State
-  setupActions:
-  - {fileID: 11400000, guid: 4cf3adeaa73a240e8b870beba7f4e0f6, type: 2}
+  setupActions: []
   actions: []
   eventTriggeredActions: []
   exitActions: []
   transitions:
   - decision: {fileID: 11400000, guid: c820138e1c1ec4deb9c7f9df84de6124, type: 2}
     trueState: {fileID: 11400000, guid: f17db26d965de469dad95c9661c5a1ff, type: 2}
+    falseState: {fileID: 11400000, guid: 395d473c4d1d2406e9ce7fde84174323, type: 2}
+  - decision: {fileID: 11400000, guid: 1a5fcbe822c6d44d2a43d388a0fab266, type: 2}
+    trueState: {fileID: 11400000, guid: da823b13ad57a4386b9f321e7ed8cab1, type: 2}
     falseState: {fileID: 11400000, guid: 395d473c4d1d2406e9ce7fde84174323, type: 2}
   sceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
