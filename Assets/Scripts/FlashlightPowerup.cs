@@ -41,13 +41,13 @@ public class FlashlightPowerup : MonoBehaviour, IPowerup
     {
         if (globalDarkness == null) return;
 
-        Color originalColor = globalDarkness.color;
-        globalDarkness.color = boostedColor;
+        //Color originalColor = globalDarkness.color;
+        // globalDarkness.color = boostedColor;
 
         if (sr != null) sr.enabled = false;
         if (col != null) col.enabled = false;
-
-        StartCoroutine(FadeBackToOriginal(globalDarkness, originalColor));
+        i.GetComponent<BatStateController>().SetPowerup(PowerupType.Flashlight);
+        //StartCoroutine(FadeBackToOriginal(globalDarkness, originalColor));
     }
 
     private IEnumerator FadeBackToOriginal(Light2D light, Color originalColor)

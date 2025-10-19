@@ -44,26 +44,25 @@ public class SunPowerup : MonoBehaviour, IPowerup
 
     public void ApplyPowerup(MonoBehaviour i)
     {
+        TopDownBatController batController;
+        bool result = i.TryGetComponent<TopDownBatController>(out batController);
+        if (result)
+        {
+            batController.HasSunPowerup = true;
+        }
+
         if (sr != null) sr.enabled = false;
         if (col != null) col.enabled = false;
 
-        var rate = emission.rateOverTime;
-        rate.constant = boostedRate;
-        emission.rateOverTime = rate;
-
-        StartCoroutine(RevertEmissionRate());
+        // FSM style powerup application
+        BatStateController bat;
+        bool r = i.TryGetComponent<BatStateController>(out bat);
+        if (r)
+        {
+            bat.SetPowerup(this.powerupType);
+        }
     }
 
-    private IEnumerator RevertEmissionRate()
-    {
-        yield return new WaitForSeconds(duration);
-
-        var rate = emission.rateOverTime;
-        rate.constant = startRate;
-        emission.rateOverTime = rate;
-
-        DestroyPowerup();
-    }
 
     public void DestroyPowerup()
     {

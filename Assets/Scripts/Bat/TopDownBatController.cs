@@ -48,6 +48,9 @@ public class TopDownBatController : MonoBehaviour, IControllable
 
     private Animator _batAnim;
 
+
+    private BatStateController _batStateController;
+    public bool HasSunPowerup { get; set; } = false;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -62,7 +65,15 @@ public class TopDownBatController : MonoBehaviour, IControllable
 
     private void OnSonar(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed) TrySonarPulse();
+        if (ctx.performed)
+        {
+            if (HasSunPowerup)
+            {
+                _batStateController.SonarPulse();
+                HasSunPowerup = false;
+            }
+            TrySonarPulse();
+        }
     }
 
     private void TrySonarPulse()
@@ -106,6 +117,7 @@ public class TopDownBatController : MonoBehaviour, IControllable
         _dashDirection = _lookDirection.normalized;
         _lastDashTime = Time.time;
     }
+
 
     private void FixedUpdate()
     {
@@ -151,6 +163,7 @@ public class TopDownBatController : MonoBehaviour, IControllable
 
     private void Start()
     {
+        _batStateController = GetComponent<BatStateController>();
         _moveInput = Vector2.zero;
     }
 

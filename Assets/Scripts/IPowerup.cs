@@ -19,6 +19,8 @@ public interface IPowerupApplicable
 
 public enum PowerupType
 {
+
+    Default = -1,
     Flashlight = 0,
     Sun = 1,
 }
