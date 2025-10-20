@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15628e40da63141319fb1e8ba0a5ce15, type: 3}
   m_Name: CountdownDecision
   m_EditorClassIdentifier: Assembly-CSharp::CountdownDecision
-  buffDuration: 0
+  buffDuration: 2
