@@ -7,19 +7,14 @@ public class ActivateSunDecision : Decision
     {
         BatStateController bat = (BatStateController)controller;
 
-        // The powerup must have been collected
-        if (bat.currentPowerupType == PowerupType.Sun)
-        {
-            Debug.Log("Checking ActivateSunDecision...");
+        Debug.Log("Current power up is" + bat.currentPowerupType);
 
-            // We check a one-time flag toggled by SonarPulse() when player presses Space
-            bool shouldActivate = bat.HasActivatedSun;
-            if (shouldActivate)
-            {
-                // Reset flag so it only triggers once
-                bat.HasActivatedSun = false;
-                return true; // triggers transition
-            }
+        if (bat.currentPowerupType == PowerupType.Sun && bat.HasActivatedSun)
+        {
+            Debug.Log("Sunray to Default");
+            bat.HasActivatedSun = false;
+            bat.currentPowerupType = PowerupType.Default;
+            return true; // triggers transition
         }
 
         return false;

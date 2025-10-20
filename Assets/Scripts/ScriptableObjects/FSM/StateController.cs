@@ -71,7 +71,7 @@ public abstract class StateController : MonoBehaviour
     public void Update()
     {
 
-        Debug.Log($"[FSM] Frame Update | CurrentState={currentState.name} | TimeElapsed={stateTimeElapsed:F2}s");
+        //Debug.Log($"[FSM] Frame Update | CurrentState={currentState.name} | TimeElapsed={stateTimeElapsed:F2}s");
         if (!isActive) return; // this is different from gameObject active, allow for separate control
 
         currentState.UpdateState(this);

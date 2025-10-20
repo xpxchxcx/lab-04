@@ -19,7 +19,7 @@ public class TransformDecision : Decision
         {
             bool stateMatch = toCompareState == map[i].fromState;
             bool powerupMatch = m.currentPowerupType == map[i].powerupCollected;
-            Debug.Log($"[Decision:Transform] {name} | StateMatch={stateMatch} ({toCompareState} vs {map[i].fromState}) | PowerupMatch={powerupMatch} ({m.currentPowerupType} vs {map[i].powerupCollected})");
+            //Debug.Log($"[Decision:Transform] {name} | StateMatch={stateMatch} ({toCompareState} vs {map[i].fromState}) | PowerupMatch={powerupMatch} ({m.currentPowerupType} vs {map[i].powerupCollected})");
 
             if (stateMatch && powerupMatch)
             {

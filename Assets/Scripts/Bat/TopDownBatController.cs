@@ -63,6 +63,14 @@ public class TopDownBatController : MonoBehaviour, IControllable
 
     }
 
+    private void OnEnable()
+    {
+        if (_playerActions == null)
+            _playerActions = new PlayerActions();
+
+        _playerActions.BatMovement.Enable();
+    }
+
     private void OnSonar(InputAction.CallbackContext ctx)
     {
         if (ctx.performed)
@@ -87,7 +95,6 @@ public class TopDownBatController : MonoBehaviour, IControllable
         lastSonarTime = Time.time;
     }
 
-    private void OnEnable() => _playerActions.BatMovement.Enable();
     private void OnDisable() => _playerActions.BatMovement.Disable();
 
     private void OnMove(InputAction.CallbackContext ctx)

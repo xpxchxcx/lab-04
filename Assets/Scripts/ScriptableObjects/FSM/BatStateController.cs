@@ -34,7 +34,6 @@ public class BatStateController : StateController
 
     public void SonarPulse()
     {
-
         this.currentState.DoEventTriggeredActions(this, ActionType.Sonar);
         HasActivatedSun = true;
     }
@@ -42,6 +41,8 @@ public class BatStateController : StateController
 
     public void TriggerSunRay(ParticleSystem psPrefab, float startRate, float boostedRate, float duration)
     {
+        currentPowerupType = PowerupType.Sun;
+
         if (sunRayRoutine != null)
             StopCoroutine(sunRayRoutine);
 
@@ -107,7 +108,6 @@ public class BatStateController : StateController
 
     void Update()
     {
-        Debug.Log($"[BAT] Powerup={currentPowerupType} | State={(currentState ? currentState.name : "None")}");
         base.Update();
     }
 

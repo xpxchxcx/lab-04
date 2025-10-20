@@ -59,7 +59,7 @@ public class ParticleTrailLight : MonoBehaviour
 
             if (hit.collider != null)
             {
-                Debug.Log($"Hit '{hit.collider.name}' on layer '{LayerMask.LayerToName(hit.collider.gameObject.layer)}'");
+                //Debug.Log($"Hit '{hit.collider.name}' on layer '{LayerMask.LayerToName(hit.collider.gameObject.layer)}'");
 
                 // if hit enemy (teoenming)
                 if (hit.collider.CompareTag(specialTag))
@@ -67,7 +67,7 @@ public class ParticleTrailLight : MonoBehaviour
                     // spawn SPECIAL light (temporary)
                     Light2D special = Instantiate(specialLightPrefab, hit.point, Quaternion.identity);
                     special.intensity = lightIntensity;
-                    Debug.Log($"Particle hit ENEMY '{hit.collider.name}' at {hit.point}");
+                    //Debug.Log($"Particle hit ENEMY '{hit.collider.name}' at {hit.point}");
                     DebugDrawCircle(hit.point, collisionRadius, debugHitColor);
                     Destroy(special.gameObject, lightDuration);
                 }
@@ -77,7 +77,7 @@ public class ParticleTrailLight : MonoBehaviour
                     // spawn persistent DEFAULT light
                     Light2D envLight = Instantiate(defaultLightPrefab, hit.point, Quaternion.identity);
                     envLight.intensity = lightIntensity;
-                    Debug.Log($"Particle hit ENVIRONMENT '{hit.collider.name}' at {hit.point}. Persistent light placed.");
+                    //Debug.Log($"Particle hit ENVIRONMENT '{hit.collider.name}' at {hit.point}. Persistent light placed.");
                     DebugDrawCircle(hit.point, collisionRadius, debugMissColor);
                     // persistent — no destroy
                 }

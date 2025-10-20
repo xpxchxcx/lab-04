@@ -62,7 +62,7 @@ public class State : ScriptableObject
             }
 
             bool decisionSucceded = transitions[i].decision.Decide(controller);
-            Debug.Log($"[FSM] Checking transition in {name} | Decision={transitions[i].decision.name} → {decisionSucceded}");
+            //Debug.Log($"[FSM] Checking transition in {name} | Decision={transitions[i].decision.name} → {decisionSucceded}");
 
             if (decisionSucceded)
             {
