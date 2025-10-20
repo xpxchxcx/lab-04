@@ -34354,37 +34354,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6637038853185287882, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1744943432420770800}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
---- !u!1 &1744943432420770799 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6637038853185287882, guid: 1e4f882a78ed744c1afb539b45e97a54, type: 3}
-  m_PrefabInstance: {fileID: 1744943432420770798}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1744943432420770800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1744943432420770799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d699c1e20ad3a4f3c86c2da5a6a7b37f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BatStateController
-  startState: {fileID: 11400000, guid: 734530bed7d264e55b7ff877ea49dd8a, type: 2}
-  previousState: {fileID: 0}
-  currentState: {fileID: 0}
-  remainState: {fileID: 11400000, guid: 395d473c4d1d2406e9ce7fde84174323, type: 2}
-  transitionStateChanged: 0
-  stateTimeElapsed: 0
-  isActive: 1
-  currentPowerupType: -1
-  shouldBeNextState: -1
 --- !u!1001 &2219647781855725307
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 651877967581908829}
   - component: {fileID: 5252175175032359542}
   - component: {fileID: 4849304613671910025}
+  - component: {fileID: 7296717923631383691}
   m_Layer: 8
   m_Name: Bat
   m_TagString: Player
@@ -218,6 +219,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbdfa72cfd8873abc973ddb6d54afd57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TopDownBatController
+  OnBatDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSonarPulse:
+    m_PersistentCalls:
+      m_Calls: []
   sonarPulsePrefab: {fileID: 2669012895495707921, guid: 756748325f2cce81f87bb912d5b2fd6a, type: 3}
   sonarSpawnPoint: {fileID: 450495953195028667}
   sonarCooldown: 2
@@ -290,3 +297,24 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.390625
+--- !u!114 &7296717923631383691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6637038853185287882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d699c1e20ad3a4f3c86c2da5a6a7b37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BatStateController
+  startState: {fileID: 11400000, guid: 734530bed7d264e55b7ff877ea49dd8a, type: 2}
+  previousState: {fileID: 0}
+  currentState: {fileID: 0}
+  remainState: {fileID: 11400000, guid: 395d473c4d1d2406e9ce7fde84174323, type: 2}
+  transitionStateChanged: 0
+  stateTimeElapsed: 0
+  isActive: 1
+  currentPowerupTypes: 
+  shouldBeNextState: -1
