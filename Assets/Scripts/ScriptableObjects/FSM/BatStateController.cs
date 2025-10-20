@@ -70,34 +70,39 @@ public class BatStateController : StateController
         Destroy(ps.gameObject);
     }
 
-    public void TriggerFlashlight(Light2D globalDarkness, Color boostedColor, float brightDuration, float fadeDuration)
+    public void TriggerFlashlight(float boostedOuterRadius, float normalOuterRadius, float brightDuration, float fadeDuration)
     {
-        if (globalDarkness == null) return;
-        StartCoroutine(HandleFlashlight(globalDarkness, boostedColor, brightDuration, fadeDuration));
+        // Find the Light2D in the Bat¡¯s child (the LightSource)
+        Light2D lightSource = GetComponentInChildren<Light2D>();
+        if (lightSource == null) return;
+
+        // Stop any previous coroutine if already running
+        StopAllCoroutines();
+        StartCoroutine(HandleFlashlight(lightSource, boostedOuterRadius, normalOuterRadius, brightDuration, fadeDuration));
     }
 
-    private IEnumerator HandleFlashlight(Light2D light, Color boostedColor, float brightDuration, float fadeDuration)
+    private IEnumerator HandleFlashlight(Light2D light, float boostedOuterRadius, float normalOuterRadius, float brightDuration, float fadeDuration)
     {
-        Color originalColor = light.color;
+        // Instantly boost light radius
+        float originalOuterRadius = light.pointLightOuterRadius;
+        light.pointLightOuterRadius = boostedOuterRadius;
 
-        // Boost light immediately
-        light.color = boostedColor;
-
-        // Wait for bright duration
+        // Stay bright for duration
         yield return new WaitForSeconds(brightDuration);
 
-        // Fade back to original
-        Color startColor = light.color;
+        // Fade back down
         float elapsed = 0f;
+        float startRadius = boostedOuterRadius;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            light.color = Color.Lerp(startColor, originalColor, elapsed / fadeDuration);
+            light.pointLightOuterRadius = Mathf.Lerp(startRadius, normalOuterRadius, elapsed / fadeDuration);
             yield return null;
         }
 
-        light.color = originalColor;
+        // Ensure final value is correct
+        light.pointLightOuterRadius = normalOuterRadius;
     }
 
     void Update()

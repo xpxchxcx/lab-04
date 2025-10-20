@@ -42,7 +42,7 @@ public class FlashlightPowerup : MonoBehaviour, IPowerup
         if (globalDarkness == null) return;
 
         //Color originalColor = globalDarkness.color;
-        // globalDarkness.color = boostedColor;
+        //globalDarkness.color = boostedColor;
 
         if (sr != null) sr.enabled = false;
         if (col != null) col.enabled = false;

@@ -11,6 +11,7 @@ public class ActivateSunDecision : Decision
         if (bat.currentPowerupType == PowerupType.Sun)
         {
             Debug.Log("Checking ActivateSunDecision...");
+
             // We check a one-time flag toggled by SonarPulse() when player presses Space
             bool shouldActivate = bat.HasActivatedSun;
             if (shouldActivate)
