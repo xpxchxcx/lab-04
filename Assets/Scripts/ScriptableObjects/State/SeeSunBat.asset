@@ -10,17 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13f319beccbf742699cd85545133a078, type: 3}
-  m_Name: DefaultBat
+  m_Name: SeeSunBat
   m_EditorClassIdentifier: Assembly-CSharp::State
-  setupActions: []
+  setupActions:
+  - {fileID: 11400000, guid: 4cf3adeaa73a240e8b870beba7f4e0f6, type: 2}
   actions: []
-  eventTriggeredActions: []
+  eventTriggeredActions:
+  - action: {fileID: 11400000, guid: fda83f4bb3bab4e0d9c271dfa9178e1c, type: 2}
+    type: 0
   exitActions: []
   transitions:
-  - decision: {fileID: 11400000, guid: 8be27919779eee04d9bacbeaa24118a6, type: 2}
+  - decision: {fileID: 11400000, guid: 27dfca38286b2cf4da91bb9051b3949d, type: 2}
     trueState: {fileID: 11400000, guid: f17db26d965de469dad95c9661c5a1ff, type: 2}
     falseState: {fileID: 11400000, guid: 395d473c4d1d2406e9ce7fde84174323, type: 2}
-  - decision: {fileID: 11400000, guid: 9692528da7ab6f64d87c1827505c4182, type: 2}
+  - decision: {fileID: 11400000, guid: 68815830e2a7eec4c855102a8f2b50ec, type: 2}
     trueState: {fileID: 11400000, guid: da823b13ad57a4386b9f321e7ed8cab1, type: 2}
     falseState: {fileID: 11400000, guid: 395d473c4d1d2406e9ce7fde84174323, type: 2}
   sceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

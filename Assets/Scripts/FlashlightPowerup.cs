@@ -46,7 +46,7 @@ public class FlashlightPowerup : MonoBehaviour, IPowerup
 
         if (sr != null) sr.enabled = false;
         if (col != null) col.enabled = false;
-        i.GetComponent<BatStateController>().SetPowerup(PowerupType.Flashlight);
+        i.GetComponent<BatStateController>().AddPowerup(PowerupType.Flashlight);
         //StartCoroutine(FadeBackToOriginal(globalDarkness, originalColor));
     }
 

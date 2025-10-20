@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "PluggableSM/Decisions/ActivateSun")]
-public class ActivateSunDecision : Decision
+[CreateAssetMenu(menuName = "PluggableSM/Decisions/ActivateSunSee")]
+public class ActivateSunSeeDecision : Decision
 {
     public override bool Decide(StateController controller)
     {
@@ -9,7 +9,7 @@ public class ActivateSunDecision : Decision
 
         if (bat.currentPowerupTypes.Contains(PowerupType.Sun) && bat.HasActivatedSun)
         {
-            Debug.Log("Sunray to Default");
+            Debug.Log("SunSee to See");
             bat.HasActivatedSun = false;
             bat.currentPowerupTypes.Remove(PowerupType.Sun);
             return true; // triggers transition

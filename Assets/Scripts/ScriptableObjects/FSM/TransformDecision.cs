@@ -1,6 +1,6 @@
-
+﻿using System.Linq; // for All()
 using UnityEngine;
-using System;
+
 [CreateAssetMenu(menuName = "PluggableSM/Decisions/Transform")]
 public class TransformDecision : Decision
 {
@@ -9,32 +9,30 @@ public class TransformDecision : Decision
     public override bool Decide(StateController controller)
     {
         BatStateController m = (BatStateController)controller;
-        // we assume that the state is named (string matched) after one of possible values in MarioState
-        // convert between current state name into MarioState enum value using custom class EnumExtension
-        // you are free to modify this to your own use
         BatState toCompareState = EnumExtension.ParseEnum<BatState>(m.currentState.name);
 
-        // loop through state transform and see if it matches the current transformation we are looking for
         for (int i = 0; i < map.Length; i++)
         {
             bool stateMatch = toCompareState == map[i].fromState;
-            bool powerupMatch = m.currentPowerupType == map[i].powerupCollected;
-            //Debug.Log($"[Decision:Transform] {name} | StateMatch={stateMatch} ({toCompareState} vs {map[i].fromState}) | PowerupMatch={powerupMatch} ({m.currentPowerupType} vs {map[i].powerupCollected})");
 
-            if (stateMatch && powerupMatch)
+            // allPowerupsMatch is true only if requiredPowerups is non-empty
+            // and all of them are present in currentPowerupTypes
+            bool allPowerupsMatch = map[i].requiredPowerups.Length > 0 &&
+                                    map[i].requiredPowerups.All(p => m.currentPowerupTypes.Contains(p));
+
+            if (stateMatch && allPowerupsMatch)
             {
                 return true;
             }
         }
 
-        return false;
-
+        return false; // no match
     }
-}
 
-[System.Serializable]
-public struct StateTransformMap
-{
-    public BatState fromState;
-    public PowerupType powerupCollected;
+    [System.Serializable]
+    public struct StateTransformMap
+    {
+        public BatState fromState;
+        public PowerupType[] requiredPowerups;
+    }
 }

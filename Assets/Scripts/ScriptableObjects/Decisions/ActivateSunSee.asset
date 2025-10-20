@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae977b8f777194a2b894b9f837ffab9a, type: 3}
-  m_Name: ShouldTransformToSunRayBat
-  m_EditorClassIdentifier: Assembly-CSharp::TransformDecision
-  map:
-  - fromState: -1
-    powerupCollected: 1
+  m_Script: {fileID: 11500000, guid: 8a76ecc876537483183bad727c4923fa, type: 3}
+  m_Name: ActivateSunSee
+  m_EditorClassIdentifier: Assembly-CSharp::ActivateSunSeeDecision

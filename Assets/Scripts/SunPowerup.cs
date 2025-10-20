@@ -57,9 +57,10 @@ public class SunPowerup : MonoBehaviour, IPowerup
         // FSM style powerup application
         BatStateController bat;
         bool r = i.TryGetComponent<BatStateController>(out bat);
+
         if (r)
         {
-            bat.SetPowerup(this.powerupType);
+            bat.AddPowerup(this.powerupType);
         }
     }
 

@@ -7,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class BatStateController : StateController
 {
     private Coroutine sunRayRoutine;
-    public PowerupType currentPowerupType = PowerupType.Default;
+    public List<PowerupType> currentPowerupTypes = new List<PowerupType>();
     public BatState shouldBeNextState = BatState.DefaultBat;
 
 
@@ -22,14 +22,15 @@ public class BatStateController : StateController
     public void GameRestart()
     {
         // clear powerup
-        currentPowerupType = PowerupType.Default;
+        currentPowerupTypes = new List<PowerupType>();
         // set the start state
         TransitionToState(startState);
     }
 
-    public void SetPowerup(PowerupType i)
+    public void AddPowerup(PowerupType type)
     {
-        currentPowerupType = i;
+        if (!currentPowerupTypes.Contains(type))
+            currentPowerupTypes.Add(type);
     }
 
     public void SonarPulse()
@@ -41,7 +42,7 @@ public class BatStateController : StateController
 
     public void TriggerSunRay(ParticleSystem psPrefab, float startRate, float boostedRate, float duration)
     {
-        currentPowerupType = PowerupType.Sun;
+        AddPowerup(PowerupType.Sun);
 
         if (sunRayRoutine != null)
             StopCoroutine(sunRayRoutine);

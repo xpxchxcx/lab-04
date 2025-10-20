@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae977b8f777194a2b894b9f837ffab9a, type: 3}
-  m_Name: ShouldTransformToAllSeeBat
-  m_EditorClassIdentifier: Assembly-CSharp::TransformDecision
-  map:
-  - fromState: -1
-    powerupCollected: 0
+  m_Script: {fileID: 11500000, guid: 15628e40da63141319fb1e8ba0a5ce15, type: 3}
+  m_Name: CountdownDecision
+  m_EditorClassIdentifier: Assembly-CSharp::CountdownDecision
+  buffDuration: 0
