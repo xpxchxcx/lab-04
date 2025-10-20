@@ -88,7 +88,6 @@ public class LevelOneManager : MonoBehaviour
 
     public void QuitToMainMenu()
     {
-        AudioManager.I.PlayMainMenuTheme();
         Debug.Log("Quit to main menu called");
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
